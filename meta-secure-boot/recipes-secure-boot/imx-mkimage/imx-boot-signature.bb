@@ -5,14 +5,14 @@ inherit cst hab deploy features_check
 
 REQUIRED_MACHINE_FEATURES = "imx-boot-signature"
 
-DEPENDS += "cst-signer imx-boot"
+DEPENDS += "cst-signer ${PREFERRED_PROVIDER_u-boot}"
 
 # For signing the imx-boot image after it has been deployed to DEPLOY_DIR_IMAGE
-do_compile[depends] += "imx-boot:do_deploy"
+do_compile[depends] += "${PREFERRED_PROVIDER_u-boot}:do_deploy"
 
-BOOT_IMAGE_SD = "imx-boot-${MACHINE}-sd.bin-${SIGNED_TARGET}"
-BOOT_TOOLS = "imx-boot-tools"
-BOOT_NAME = "imx-boot"
+BOOT_IMAGE_SD ?= "imx-boot-${MACHINE}-sd.bin-${SIGNED_TARGET}"
+BOOT_TOOLS ?= "imx-boot-tools"
+BOOT_NAME ?= "imx-boot"
 
 # Signs the imx-boot image. This command assumes that the PKI tree was generated.
 do_sign_boot_image() {
@@ -49,7 +49,7 @@ do_sign_boot_image:append() {
 
     # Check if SD image is available
     if [ ! -e "${DEPLOY_DIR_IMAGE}/${BOOT_IMAGE_SD}" ]; then
-        bbfatal 'imx-boot SD image is not available to sign'
+        bbfatal "imx-boot SD image is not available to sign: ${DEPLOY_DIR_IMAGE}/${BOOT_IMAGE_SD}"
     fi
     # Generate signed image using cst_signer
     CST_PATH=${CST_PATH} ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/cst_signer -d -i ${DEPLOY_DIR_IMAGE}/${BOOT_IMAGE_SD} -c ${SIGNDIR}/csf.cfg
