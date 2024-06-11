@@ -5,9 +5,7 @@ inherit cst hab deploy features_check
 
 REQUIRED_MACHINE_FEATURES = "linux-imx-signature"
 
-DEPENDS += "cst-signer linux-imx u-boot-imx"
-DEPENDS:append:ahab = " imx-boot"
-DEPENDS:append:mx8m-generic-bsp = " imx-boot"
+DEPENDS += "cst-signer ${PREFERRED_PROVIDER_virtual/kernel} ${PREFERRED_PROVIDER_u-boot}"
 
 # All deploy tasks of DEPENDS should be done
 do_compile[deptask] = "do_deploy"
