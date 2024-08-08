@@ -23,6 +23,7 @@ do_compile:prepend:ahab() {
 BOOT_TOOLS = "imx-boot-tools"
 
 do_deploy:append:hab4() {
+    install -d ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}
     unset i j
     for type in ${UBOOT_CONFIG}; do
         i=$(expr $i + 1)
